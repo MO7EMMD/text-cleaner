@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f7f2">
+  <meta name="description" content="Clean pasted text, fix spacing, remove duplicate lines, and count words. A free tool that works offline in your browser.">
+  <title>Text Cleaner · mo7mels</title>
+  <style>
+    :root{color-scheme:light;--bg:#f6f7f2;--panel:#fff;--ink:#19291f;--muted:#58655b;--line:#d9e0d6;--green:#235c39;--soft:#eaf1e5;--focus:#36784b}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}button,input,select,textarea{font:inherit}button,a,select,input{touch-action:manipulation}button{cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}a{color:var(--green);text-underline-offset:4px}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+    .shell{width:min(1120px,100% - 40px);margin:auto}header{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:25px 0;border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:11px;font-weight:750;letter-spacing:-.04em}.brand-mark{display:grid;place-items:center;width:36px;height:36px;border-radius:11px;background:var(--green);color:white;font-size:17px}.byline{display:block;font-size:11px;letter-spacing:0;color:var(--muted);font-weight:500}.source-link{font-size:13px;font-weight:600;white-space:nowrap}
+    main{padding:40px 0 28px}.intro{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:26px}h1{font-size:clamp(29px,5vw,44px);line-height:1.15;letter-spacing:-.055em;margin:0 0 12px}.intro p{max-width:650px;margin:0;color:var(--muted);font-size:14px}.privacy{flex-shrink:0;align-self:start;display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid var(--line);border-radius:30px;background:var(--soft);font-size:12px;font-weight:600}.privacy:before{content:"";width:7px;height:7px;background:var(--green);border-radius:50%}
+    .workspace{border:1px solid var(--line);border-radius:18px;background:var(--panel);overflow:hidden;box-shadow:0 14px 35px #19291f06}.editors{display:grid;grid-template-columns:1fr 1fr}.editor{padding:22px;min-width:0}.editor+.editor{border-left:1px solid var(--line);background:#fafcf8}.editor-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.editor-heading label{font-size:14px;font-weight:700}.hint{font-size:11px;color:var(--muted)}textarea{display:block;resize:vertical;width:100%;min-height:290px;padding:15px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink);font:14px/1.85 ui-monospace,SFMono-Regular,Consolas,monospace;tab-size:4}textarea::placeholder{color:#778278;opacity:1}textarea[readonly]{background:#f4f7f0}.stats{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:12px;min-height:22px;font-size:12px;color:var(--muted)}.stats strong{color:var(--ink);font-weight:650}
+    fieldset{min-width:0;margin:0;padding:20px 22px;border:0;border-top:1px solid var(--line)}legend{float:left;width:100%;margin:0 0 12px;font-size:13px;font-weight:700}.options{clear:both;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 22px}.option{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--ink)}.option input{width:17px;height:17px;margin:0;flex-shrink:0;accent-color:var(--green)}.option:has(input:disabled){color:var(--muted)}.case-option{display:flex;align-items:center;gap:10px;font-size:13px}select{min-width:0;max-width:100%;padding:6px 9px;border:1px solid var(--line);border-radius:7px;background:var(--panel);color:var(--ink);font-size:12px}
+    .actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:18px 22px;border-top:1px solid var(--line);background:#fafcf8}.button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:42px;padding:9px 15px;border:1px solid var(--line);border-radius:9px;background:var(--panel);color:var(--ink);font-size:13px;font-weight:600}.button:hover:enabled{background:var(--soft)}.primary{background:var(--green);border-color:var(--green);color:white}.primary:hover:enabled{background:#17492b}.quiet{border-color:transparent;background:transparent;color:var(--muted);padding:6px 9px;min-height:34px;font-size:12px}.spacer{flex:1}.file-note{display:block;margin-top:8px;font-size:11px;color:var(--muted)}.status{min-height:24px;margin:14px 4px 0;font-size:13px;color:var(--green)}.status[data-error="true"]{color:#a12b23}.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.notes{margin:18px 4px 0;color:var(--muted);font-size:12px}.notes p{margin:6px 0}.notes strong{color:var(--ink)}footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;padding:21px 0 28px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+    @media(max-width:760px){.intro{flex-direction:column;align-items:start;gap:14px}.editors{grid-template-columns:1fr}.editor+.editor{border-left:0;border-top:1px solid var(--line)}.options{grid-template-columns:repeat(2,minmax(0,1fr))}textarea{min-height:220px}main{padding-top:28px}}
+    @media(max-width:430px){.shell{width:calc(100% - 24px)}header{padding:18px 0}.editor,fieldset{padding:17px}.actions{padding:16px;gap:8px}.options{grid-template-columns:1fr}.spacer{display:none}.primary{flex-basis:100%}.editor-heading{flex-wrap:wrap}.hint{font-size:10px}}
+    @media(prefers-color-scheme:dark){:root{color-scheme:dark;--bg:#111914;--panel:#19251d;--ink:#e8f0e5;--muted:#b1bfaf;--line:#354638;--green:#a9e39b;--soft:#263829;--focus:#b6f5a5}.brand-mark,.primary{color:#142017;background:#a9e39b}.primary:hover:enabled{background:#bff4b1}.editor+.editor,.actions{background:#162119}textarea[readonly]{background:#142017}textarea::placeholder{color:#99ab97}.status[data-error="true"]{color:#ffb6ab}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="brand"><span class="brand-mark" aria-hidden="true">Tt</span><div>Text Cleaner<span class="byline">a useful little tool by mo7mels</span></div></div>
+      <a class="source-link" href="https://github.com/MO7EMMD/text-cleaner" target="_blank" rel="noreferrer">View source ↗</a>
+    </header>
+    <main>
+      <div class="intro"><div><h1>Clean up your text.</h1><p>Fix spacing, remove duplicate lines, and get a fresh copy ready to use. Your text stays in your browser.</p></div><span class="privacy">Works offline</span></div>
+      <noscript><p>This tool needs JavaScript enabled in your browser. It works locally and does not require an internet connection.</p></noscript>
+      <section class="workspace" aria-label="Text cleanup workspace">
+        <div class="editors">
+          <div class="editor">
+            <div class="editor-heading"><label for="input">Original text</label><button class="button quiet" id="sample" type="button">Try an example</button></div>
+            <textarea id="input" dir="auto" spellcheck="false" autocomplete="off" placeholder="Paste your notes, a list, or text copied from a document…" aria-describedby="input-stats file-note"></textarea>
+            <div class="stats" id="input-stats"><span><strong id="input-words">0</strong> words</span><span><strong id="input-characters">0</strong> characters</span><span><strong id="input-lines">0</strong> lines</span></div>
+            <span class="file-note" id="file-note">Paste text or open a UTF-8 .txt file. Up to 250 KB.</span>
+          </div>
+          <div class="editor">
+            <div class="editor-heading"><label for="output">Cleaned text</label><span class="hint" id="result-hint">Your result will appear here</span></div>
+            <textarea id="output" dir="auto" readonly spellcheck="false" autocomplete="off" placeholder="Choose your options, then select Clean text." aria-describedby="output-stats result-hint"></textarea>
+            <div class="stats" id="output-stats"><span><strong id="output-words">0</strong> words</span><span><strong id="output-characters">0</strong> characters</span><span><strong id="output-lines">0</strong> lines</span></div>
+          </div>
+        </div>
+        <fieldset>
+          <legend>Cleanup options</legend>
+          <div class="options">
+            <label class="option"><input type="checkbox" id="trim" checked>Trim each line’s edges</label>
+            <label class="option"><input type="checkbox" id="spaces" checked>Fix repeated spaces and tabs</label>
+            <label class="option"><input type="checkbox" id="blank">Remove blank lines</label>
+            <label class="option"><input type="checkbox" id="duplicates">Remove duplicate lines</label>
+            <label class="option"><input type="checkbox" id="ignore-case" disabled>Ignore case for duplicates</label>
+            <label class="case-option" for="letter-case">Letter case <select id="letter-case"><option value="keep">Keep original</option><option value="lower">lowercase</option><option value="upper">UPPERCASE</option></select></label>
+          </div>
+        </fieldset>
+        <div class="actions">
+          <button class="button primary" id="clean" type="button" disabled>Clean text <span aria-hidden="true">→</span></button>
+          <button class="button" id="copy" type="button" disabled>Copy result</button>
+          <button class="button" id="download" type="button" disabled>Download .txt</button>
+          <span class="spacer"></span>
+          <button class="button quiet" id="open" type="button">Open .txt file</button>
+          <input class="visually-hidden" id="file" type="file" accept=".txt,text/plain" tabindex="-1" aria-label="Choose a plain text file">
+          <button class="button quiet" id="reset" type="button">Reset</button>
+        </div>
+      </section>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+      <div class="notes"><p><strong>Your original stays intact.</strong> Cleanup only changes the result. Duplicate removal keeps the first matching non-empty line in its original order.</p><p>Paragraph breaks stay unless you choose to remove blank lines. Use plain prose or lists; spacing changes can affect code and Markdown formatting.</p></div>
+    </main>
+    <footer><span>No account, uploads, or text storage.</span><a href="https://www.mo7mels.com/portfolio/" target="_blank" rel="noreferrer">More projects by mo7mels ↗</a></footer>
+  </div>
+  <script id="text-cleaner-core">
+    'use strict';
+    globalThis.TextCleaner = (() => {
+      const MAX_BYTES = 250000;
+      const encoder = new TextEncoder();
+      const wordSegmenter = typeof Intl.Segmenter === 'function' ? new Intl.Segmenter(undefined, { granularity: 'word' }) : null;
+      const characterSegmenter = typeof Intl.Segmenter === 'function' ? new Intl.Segmenter(undefined, { granularity: 'grapheme' }) : null;
+      function byteLength(text) { return encoder.encode(text).length; }
+      function cleanText(text, options = {}) {
+        if (typeof text !== 'string') throw new TypeError('Text must be a string.');
+        if (byteLength(text) > MAX_BYTES) throw new RangeError('Please use text smaller than 250 KB.');
+        const letterCase = options.letterCase || 'keep';
+        if (!['keep', 'lower', 'upper'].includes(letterCase)) throw new RangeError('Unknown letter case option.');
+        let lines = text.replace(/\r\n?/g, '\n').split('\n');
+        const seen = new Set();
+        let duplicatesRemoved = 0;
+        lines = lines.map(line => {
+          if (options.trimEdges !== false) line = line.trim();
+          if (options.collapseSpaces !== false) line = line.replace(/[ \t\u00a0\u202f]+/g, ' ');
+          if (letterCase === 'lower') line = line.toLowerCase();
+          if (letterCase === 'upper') line = line.toUpperCase();
+          return line;
+        }).filter(line => {
+          const blank = line.trim().length === 0;
+          if (options.removeBlankLines && blank) return false;
+          if (options.removeDuplicates && !blank) {
+            const key = options.ignoreCase ? line.toLowerCase() : line;
+            if (seen.has(key)) { duplicatesRemoved++; return false; }
+            seen.add(key);
+          }
+          return true;
+        });
+        return { text: lines.join('\n'), duplicatesRemoved };
+      }
+      function countText(text) {
+        let words = 0;
+        let characters = 0;
+        if (wordSegmenter) {
+          for (const segment of wordSegmenter.segment(text)) if (segment.isWordLike) words++;
+        } else {
+          words = (text.match(/[\p{L}\p{N}][\p{L}\p{M}\p{N}'’]*/gu) || []).length;
+        }
+        if (characterSegmenter) {
+          for (const _ of characterSegmenter.segment(text)) characters++;
+        } else {
+          characters = Array.from(text).length;
+        }
+        return { words, characters, lines: text === '' ? 0 : text.split(/\r\n|\r|\n/).length };
+      }
+      return { MAX_BYTES, byteLength, cleanText, countText };
+    })();
+  </script>
+  <script id="text-cleaner-ui">
+    'use strict';
+    const $ = id => document.getElementById(id);
+    const input = $('input');
+    const output = $('output');
+    const status = $('status');
+    let freshResult = false;
+    let inputVersion = 0;
+    let timer;
+    const controls = ['trim', 'spaces', 'blank', 'duplicates', 'ignore-case', 'letter-case'];
+    function announce(message, error = false) {
+      status.textContent = message;
+      status.dataset.error = String(error);
+    }
+    function updateCounts(prefix, text) {
+      const counts = TextCleaner.countText(text);
+      for (const key of ['words', 'characters', 'lines']) $(prefix + '-' + key).textContent = counts[key].toLocaleString();
+    }
+    function refreshActions() {
+      $('clean').disabled = !input.value || TextCleaner.byteLength(input.value) > TextCleaner.MAX_BYTES;
+      $('copy').disabled = $('download').disabled = !freshResult || !output.value;
+      $('sample').disabled = Boolean(input.value);
+      $('ignore-case').disabled = !$('duplicates').checked;
+    }
+    function markChanged() {
+      inputVersion++;
+      freshResult = false;
+      $('result-hint').textContent = output.value ? 'Text or options changed · clean again' : 'Your result will appear here';
+      refreshActions();
+    }
+    function inputChanged() {
+      markChanged();
+      clearTimeout(timer);
+      if (TextCleaner.byteLength(input.value) > TextCleaner.MAX_BYTES) {
+        announce('This text is over 250 KB. Shorten it before cleaning; your original has been kept.', true);
+        return;
+      }
+      timer = setTimeout(() => updateCounts('input', input.value), 180);
+      announce('');
+    }
+    input.addEventListener('input', inputChanged);
+    input.addEventListener('paste', event => {
+      const pasted = event.clipboardData?.getData('text');
+      if (pasted === undefined) return;
+      const next = input.value.slice(0, input.selectionStart) + pasted + input.value.slice(input.selectionEnd);
+      if (TextCleaner.byteLength(next) > TextCleaner.MAX_BYTES) {
+        event.preventDefault();
+        announce('That paste would exceed 250 KB. Paste a smaller section; your current text has been kept.', true);
+      }
+    });
+    for (const id of controls) $(id).addEventListener('change', () => { markChanged(); announce('Options changed. Select Clean text to update the result.'); });
+    $('clean').addEventListener('click', () => {
+      try {
+        const result = TextCleaner.cleanText(input.value, {
+          trimEdges: $('trim').checked, collapseSpaces: $('spaces').checked,
+          removeBlankLines: $('blank').checked, removeDuplicates: $('duplicates').checked,
+          ignoreCase: $('ignore-case').checked, letterCase: $('letter-case').value,
+        });
+        output.value = result.text;
+        freshResult = true;
+        updateCounts('input', input.value);
+        updateCounts('output', output.value);
+        $('result-hint').textContent = output.value ? 'Ready to copy or download' : 'No text remains';
+        refreshActions();
+        announce('Text cleaned.' + (result.duplicatesRemoved ? ` Removed ${result.duplicatesRemoved} duplicate line${result.duplicatesRemoved === 1 ? '' : 's'}.` : '') + (output.value ? '' : ' The result is empty.'));
+      } catch (error) { announce(error.message, true); }
+    });
+    $('copy').addEventListener('click', async () => {
+      if (!freshResult || !output.value) return;
+      try {
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(output.value);
+        } else {
+          output.focus(); output.select();
+          if (!document.execCommand('copy')) throw new Error('Clipboard unavailable');
+        }
+        announce('Cleaned text copied.');
+      } catch {
+        output.focus(); output.select();
+        announce('Your browser blocked clipboard access. The result is selected; use your browser’s Copy action.', true);
+      }
+    });
+    $('download').addEventListener('click', () => {
+      if (!freshResult || !output.value) return;
+      const url = URL.createObjectURL(new Blob([output.value], { type: 'text/plain;charset=utf-8' }));
+      const link = document.createElement('a');
+      link.href = url; link.download = 'cleaned-text.txt';
+      document.body.append(link); link.click(); link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+      announce('Download requested. The file is named cleaned-text.txt.');
+    });
+    $('open').addEventListener('click', () => $('file').click());
+    $('file').addEventListener('change', async () => {
+      const file = $('file').files[0];
+      $('file').value = '';
+      if (!file) return;
+      if (file.size > TextCleaner.MAX_BYTES) { announce('Choose a text file smaller than 250 KB. Your current text has been kept.', true); return; }
+      const version = inputVersion;
+      try {
+        const bytes = await file.arrayBuffer();
+        const text = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+        if (text.includes('\0')) throw new Error('Binary content');
+        if (inputVersion !== version) { announce('The file was not loaded because the workspace changed while it was opening. Select it again to load it.', true); return; }
+        input.value = text;
+        inputChanged();
+        updateCounts('input', text);
+        announce('Text file loaded. Select Clean text when ready.');
+      } catch { announce('This file could not be read as UTF-8 plain text. Your current text has been kept.', true); }
+    });
+    $('sample').addEventListener('click', () => {
+      if (input.value) return;
+      input.value = '  Make   time for what matters.  \n\nRead   a little each day.\nMake   time for what matters.\n  Share something useful.  ';
+      $('duplicates').checked = true;
+      inputChanged();
+      updateCounts('input', input.value);
+      announce('Example loaded with duplicate removal enabled. Select Clean text to try it.');
+    });
+    $('reset').addEventListener('click', () => {
+      clearTimeout(timer);
+      input.value = output.value = '';
+      $('trim').checked = $('spaces').checked = true;
+      for (const id of ['blank', 'duplicates', 'ignore-case']) $(id).checked = false;
+      $('letter-case').value = 'keep';
+      markChanged();
+      updateCounts('input', ''); updateCounts('output', '');
+      announce('Workspace reset.'); input.focus();
+    });
+    refreshActions();
+  </script>
+</body>
+</html>

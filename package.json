@@ -1,0 +1,9 @@
+{
+  "name": "mo7mels-text-cleaner",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A single-file, offline text cleaner for everyday prose and lists.",
+  "type": "module",
+  "scripts": { "test": "node --test" },
+  "engines": { "node": ">=20" }
+}
